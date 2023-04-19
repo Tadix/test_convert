@@ -131,10 +131,9 @@ class _TestFlutterSoundState extends State<TestFlutterSound> {
 }
 
 Future<File> mp3Convertor(String media) async {
-  String tempDir =
-      "/data/user/0/com.example.test/app_flutter"; //await getApplicationDocumentsDirectory();
-  final inputFile = File('${tempDir}/input.m4a');
-  File _mp3File = File('${tempDir}/output.mp3');
+  Directory tempDir = await getApplicationDocumentsDirectory();
+  final inputFile = File('${tempDir.path}/input.m4a');
+  File _mp3File = File('${tempDir.path}/output.mp3');
   await inputFile.writeAsBytes(await File(media).readAsBytes());
 
   final ffmpegCommand = "ffmpeg -i $inputFile -c:a libmp3lame -q:a 8 $_mp3File";
@@ -205,7 +204,7 @@ Future<dynamic>? showAudioRecorder(context) {
                                 log(path);
                                 playFromFile(flie_: File(path));
                                 // mp3Convertor(path).then(
-                                //     (value) => );
+                                //     (value) => playFromFile(flie_: value));
                               },
                             ),
                           ),
@@ -421,7 +420,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     try {
       if (await _audioRecorder.hasPermission()) {
         await _audioRecorder.start(
-            path: path + '/myFile.m4a', encoder: AudioEncoder.AAC);
+            path: path + '/myFile.m4a',);
 
         bool isRecording = await _audioRecorder.isRecording();
         setState(() {
